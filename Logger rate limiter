@@ -35,7 +35,10 @@ public:
         
     }
     
-    /** Returns true if the message should be printed in the given timestamp, otherwise returns false. The timestamp is in seconds granularity. */
+    /** Returns true if the message should be printed in the given timestamp, otherwise returns false. The timestamp is in seconds granularity. 
+    count : returns number of elements matching specific key. 
+    Return value: number of elements with key, ie either 1 or 0 or number of elements with key that compared equivalent to x.
+    */
     bool shouldPrintMessage(int timestamp, string message) {
         if (message_time_.count(message) &&
             timestamp < message_time_[message] + 10) {
