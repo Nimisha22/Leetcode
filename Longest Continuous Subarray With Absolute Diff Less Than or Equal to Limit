@@ -1,0 +1,74 @@
+Given an array of integers nums and an integer limit, return the size of the longest non-empty subarray such that the 
+absolute difference between any two elements of this subarray is less than or equal to limit.
+
+Example 1:
+
+Input: nums = [8,2,4,7], limit = 4
+Output: 2 
+Explanation: All subarrays are: 
+[8] with maximum absolute diff |8-8| = 0 <= 4.
+[8,2] with maximum absolute diff |8-2| = 6 > 4. 
+[8,2,4] with maximum absolute diff |8-2| = 6 > 4.
+[8,2,4,7] with maximum absolute diff |8-2| = 6 > 4.
+[2] with maximum absolute diff |2-2| = 0 <= 4.
+[2,4] with maximum absolute diff |2-4| = 2 <= 4.
+[2,4,7] with maximum absolute diff |2-7| = 5 > 4.
+[4] with maximum absolute diff |4-4| = 0 <= 4.
+[4,7] with maximum absolute diff |4-7| = 3 <= 4.
+[7] with maximum absolute diff |7-7| = 0 <= 4. 
+Therefore, the size of the longest subarray is 2.
+Example 2:
+
+Input: nums = [10,1,2,4,7,2], limit = 5
+Output: 4 
+Explanation: The subarray [2,4,7,2] is the longest since the maximum absolute diff is |2-7| = 5 <= 5.
+Example 3:
+
+Input: nums = [4,2,2,2,4,4,2,2], limit = 0
+Output: 3
+ 
+
+Constraints:
+
+1 <= nums.length <= 10^5
+1 <= nums[i] <= 10^9
+0 <= limit <= 10^9
+
+---------------------------------------------------------------------------------------
+
+Time Complexity: O(nlogn)
+Space cmplexity: O(n)
+
+class Solution {
+   
+public:
+    //here I have used pair to handle duplicate values and can be categoried by index
+    int longestSubarray(vector<int>& nums, int limit) {
+        int i=0,j=0,n=nums.size(),mx,mn,res=0;
+        priority_queue<pair<int,int>> mxhp;   //to find max value in window
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> mnhp; 
+        //to find min value in window
+        while(j<n) //until we reach to end
+        {
+            while(j<n) 
+            {
+                mxhp.push({nums[j],j}); //push value and index in max heap
+                mnhp.push({nums[j],j}); //push value and index in min heap
+                mx=mxhp.top().first;    //store max value of window
+                mn=mnhp.top().first;    //store min value of window
+                if(mx-mn>limit)         //if we crosses limit difference , then now we have to change window     
+                {   
+                    while(!mxhp.empty()&&mxhp.top().second<=i) mxhp.pop();//remove ith or before element from heap
+                    while(!mnhp.empty()&&mnhp.top().second<=i) mnhp.pop();//remove ith or before element from heap 
+                    j++;break;          
+                    //increment window size and break window, because we have stored jth 
+                    //index value , next time we will store (j+1)th index value
+                }
+                res=max(j-i+1,res);     //update window length 
+                j++;                    //increase window size
+            } 
+            i++;    //decrease windowsize  from starting
+        } 
+        return res; //return final maximum window size
+    }
+};
